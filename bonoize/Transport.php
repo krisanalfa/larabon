@@ -3,7 +3,7 @@
 use Illuminate\Container\Container;
 use Illuminate\Support\Manager;
 
-class Handler extends Manager
+class Transport extends Manager
 {
     /**
      * Aplication implementation
@@ -13,7 +13,7 @@ class Handler extends Manager
     protected $app;
 
     /**
-     * Initialize the Handler
+     * Initialize the Transport
      *
      * @param Container $app
      */
@@ -29,17 +29,17 @@ class Handler extends Manager
      */
     public function getDefaultDriver()
     {
-        return 'jsonHandler';
+        return config('bonoize.transport.default', 'eloquent');
     }
 
     /**
      * Create JSON Handler Driver
      *
-     * @return \Bonoize\Handlers\Contents\JsonHandler
+     * @return \Bonoize\DataTransport
      */
-    protected function createJsonHandlerDriver()
+    protected function createEloquentDriver()
     {
-        return $this->app['Bonoize\Handlers\Contents\JsonHandler'];
+        return app()->make('Bonoize\Transport\Eloquent');
     }
 
     /**

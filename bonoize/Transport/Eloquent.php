@@ -1,38 +1,120 @@
-<?php namespace Bonoize;
+<?php namespace Bonoize\Transport;
 
-class DataTransport
+use Bonoize\Helpers\Norm;
+use Bonoize\Helpers\RouterHelper;
+
+class Eloquent
 {
-    protected $normify;
+    /**
+     * Bootstrap Alert Context for Success
+     */
+    const SUCESS  = 'success';
 
+    /**
+     * Bootstrap Alert Context for Info
+     */
+    const INFO    = 'info';
+
+    /**
+     * Bootstrap Alert Context for Danger
+     */
+    const DANGER  = 'danger';
+
+    /**
+     * Bootstrap Alert Context for Warning
+     */
+    const WARNING = 'warning';
+
+    /**
+     * Bootstrap Alert Context for Error
+     */
+    const ERROR   = 'error';
+
+    /**
+     * Norm implementation
+     *
+     * @var \Bonoize\Helpers\Norm
+     */
+    protected $norm;
+
+    /**
+     * RouterHelper implementation
+     *
+     * @var \Bonoize\Helpers\RouterHelper
+     */
     protected $router;
 
+    /**
+     * Schemas configuration
+     *
+     * @var array
+     */
     protected $schemas = [];
 
+    /**
+     * Resource name of current route
+     *
+     * @var string
+     */
     protected $resourceName;
 
+    /**
+     * Route name of current route
+     *
+     * @var string
+     */
     protected $routeName;
 
+    /**
+     * Eloquent implementation
+     *
+     * @var \Illuminate\Database\Eloquent\Model
+     */
     protected $eloquentInstance;
 
+    /**
+     * Data for current controller
+     *
+     * @var array
+     */
     protected $data = [];
 
-    public function __construct(Normify $normify, RouterHelper $router)
+    /**
+     * Initialize Data Transport
+     *
+     * @param \Bonoize\Helpers\Norm             $norm
+     * @param \Bonoize\Helpers\RouterHelper $router
+     */
+    public function __construct(Norm $norm, RouterHelper $router)
     {
-        $this->normify          = $normify;
-        $this->router           = $router;
+        $this->norm   = $norm;
+        $this->router = $router;
 
         // Basic data information
         $this->resourceName     = $router->getResourceName();
-        $this->schemas          = $normify->getSchemas($this->resourceName);
+        $this->schemas          = $norm->getSchemas($this->resourceName);
         $this->routeName        = $router->getRouteName();
-        $this->eloquentInstance = $this->normify->getEloquentInstance($this->resourceName);
+        $this->eloquentInstance = $this->norm->getEloquentInstance($this->resourceName);
     }
 
+    /**
+     * Set data
+     *
+     * @param string $key
+     * @param mixed  $value
+     */
     public function setData($key, $value)
     {
         $this->data[$key] = $value;
     }
 
+    /**
+     * Get data
+     *
+     * @param  string $key
+     *
+     * @return mixed
+     */
     public function getData($key = null)
     {
         if (is_null($key)) {
@@ -44,6 +126,13 @@ class DataTransport
         }
     }
 
+    /**
+     * Same as setData, but this is mass asignment using array
+     *
+     * @param  array  $data
+     *
+     * @return void
+     */
     public function fill(array $data)
     {
         foreach ($data as $key => $value) {
@@ -51,6 +140,11 @@ class DataTransport
         }
     }
 
+    /**
+     * Get data for action index
+     *
+     * @return array
+     */
     public function index()
     {
         $collection = $this->eloquentInstance->all();
@@ -63,6 +157,11 @@ class DataTransport
         return $this->getData();
     }
 
+    /**
+     * Get data for action create
+     *
+     * @return array
+     */
     public function create()
     {
         $eloquent = $this->eloquentInstance;
@@ -75,6 +174,14 @@ class DataTransport
         return $this->getData();
     }
 
+    /**
+     * Get data for action store
+     *
+     * @param string $extension
+     * @param array  $data
+     *
+     * @return array
+     */
     public function store($extension = null, array $data)
     {
         $name     = $this->resourceName;
@@ -88,7 +195,7 @@ class DataTransport
         $model->save();
 
         $this->prepareCommonData([
-            'status' => 'success',
+            'status' => DataTransport::SUCESS,
             'model'  => $model,
             'json'   => $model,
         ]);
@@ -96,6 +203,14 @@ class DataTransport
         return $this->getData();
     }
 
+    /**
+     * Get data for action show
+     *
+     * @param  string $id
+     * @param  string $extension
+     *
+     * @return array
+     */
     public function show($id, $extension = null)
     {
         $model = $this->eloquentInstance->findOrFail($id);
@@ -108,6 +223,13 @@ class DataTransport
         return $this->getData();
     }
 
+    /**
+     * Get data for action edit
+     *
+     * @param  string $id
+     *
+     * @return array
+     */
     public function edit($id)
     {
         $this->prepareCommonData([
@@ -118,6 +240,15 @@ class DataTransport
         return $this->getData();
     }
 
+    /**
+     * Get data for action update
+     *
+     * @param  string $id
+     * @param  string $extension
+     * @param  array  $data
+     *
+     * @return array
+     */
     public function update($id, $extension = null, array $data)
     {
         $model = $this->eloquentInstance->findOrFail($id);
@@ -129,7 +260,7 @@ class DataTransport
         $model->save();
 
         $this->prepareCommonData([
-            'status' => 'success',
+            'status' => DataTransport::SUCESS,
             'model'  => $model,
             'json'   => $model,
         ]);
@@ -137,6 +268,14 @@ class DataTransport
         return $this->getData();
     }
 
+    /**
+     * Get data for action destroy
+     *
+     * @param  string $id
+     * @param  string $extension
+     *
+     * @return array
+     */
     public function destroy($id, $extension = null)
     {
         $model = $this->eloquentInstance->findOrFail($id);
@@ -144,7 +283,7 @@ class DataTransport
         $model->delete();
 
         $this->prepareCommonData([
-            'status' => 'success',
+            'status' => DataTransport::SUCESS,
             'model'  => $model,
             'json'   => $model,
         ]);
@@ -152,7 +291,14 @@ class DataTransport
         return $this->getData();
     }
 
-    private function prepareCommonData($additionalData = [])
+    /**
+     * Prepare common data for response
+     *
+     * @param  array $additionalData
+     *
+     * @return string
+     */
+    protected function prepareCommonData(array $additionalData = [])
     {
         $this->fill(array_merge([
             'name'       => $this->resourceName,
@@ -161,11 +307,24 @@ class DataTransport
         ], $additionalData));
     }
 
+    /**
+     * Get the data from attributes
+     *
+     * @param  string $key
+     *
+     * @return mixed
+     */
     public function __get($key)
     {
         return $this->getData($key);
     }
 
+    /**
+     * Set the data from attributes
+     *
+     * @param string $key
+     * @param mixed  $value
+     */
     public function __set($key, $value)
     {
         $this->setData($key, $value);

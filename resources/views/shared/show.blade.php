@@ -8,6 +8,12 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li><a href="{{ url('/') }}">Home</a></li>
+                <li><a href="{{ route($name.'.index') }}">{{ studly_case($name) }}</a></li>
+                <li class="active">Show</li>
+            </ol>
+
             <div class="panel panel-default">
                 <div class="panel-heading">
                     {{ studly_case($name) }}
@@ -21,12 +27,6 @@
                 </div>
 
                 <div class="panel-body">
-                    <ol class="breadcrumb">
-                        <li><a href="{{ url('/') }}">Home</a></li>
-                        <li><a href="{{ route($name.'.index') }}">{{ studly_case($name) }}</a></li>
-                        <li class="active">Show</li>
-                    </ol>
-
                     <form class="form-horizontal">
                         @foreach ($schemas as $name => $element)
                             <div class="form-group">

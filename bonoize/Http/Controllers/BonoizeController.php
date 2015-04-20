@@ -2,11 +2,16 @@
 
 use Bonoize\Events\ControllerEvents;
 use App\Http\Controllers\Controller;
-use Bonoize\DataTransport;
+use Bonoize\Transport;
 use Event;
 
 class BonoizeController extends Controller
 {
+    /**
+     * Transport implementation
+     *
+     * @var \Bonoize\Transport
+     */
     protected $transport;
 
     /**
@@ -16,9 +21,9 @@ class BonoizeController extends Controller
      *
      * @return void
      */
-    public function __construct(DataTransport $transport)
+    public function __construct(Transport $transport)
     {
-        $this->transport = $transport;
+        $this->transport = $transport->driver();
     }
 
     /**

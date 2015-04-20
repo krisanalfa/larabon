@@ -3,11 +3,22 @@
 return [
     'default' => 'Bonoize\Http\Controllers\BonoizeController',
 
+    'transport' => [
+        'default' => 'eloquent',
+
+        'drivers' => [
+            'eloquent' => [
+                // Future feature:
+                // - More options will come
+            ],
+        ],
+    ],
+
     'mapping' => [
         '/user' => [
             'controller'  => null,
             'name'        => 'user',
-            'middlewares' => 'auth|content',
+            'middlewares' => 'auth|contentify',
         ],
     ],
 

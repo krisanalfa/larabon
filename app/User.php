@@ -4,7 +4,7 @@ use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
-use Bonoize\Base;
+use Bonoize\Model\Base;
 
 class User extends Base implements AuthenticatableContract, CanResetPasswordContract
 {

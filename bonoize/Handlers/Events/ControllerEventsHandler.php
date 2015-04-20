@@ -4,6 +4,20 @@ use Bonoize\Events\ControllerEvents as Event;
 
 class ControllerEventsHandler
 {
+	/**
+	 * Template implementation
+	 *
+	 * @var \Bonoize\Template
+	 */
+    protected $template;
+
+    /**
+     * Router helper implementation
+     *
+     * @var \Bonoize\Helpers\RouterHelper
+     */
+    protected $router;
+
     /**
      * Create the event handler.
      *
@@ -12,7 +26,7 @@ class ControllerEventsHandler
     public function __construct()
     {
         $this->template = app()->make('Bonoize\Template');
-        $this->router   = app()->make('Bonoize\RouterHelper');
+        $this->router   = app()->make('Bonoize\Helpers\RouterHelper');
     }
 
     /**
@@ -34,7 +48,7 @@ class ControllerEventsHandler
      *
      * @return \Iluminate\Http\Response
      */
-    private function after(Event $event)
+    protected function after(Event $event)
     {
         return view($this->template->getProperTemplate(), $event->getData());
     }
@@ -46,7 +60,7 @@ class ControllerEventsHandler
      *
      * @return \Iluminate\Http\Response
      */
-    private function afterStore(Event $event)
+    protected function afterStore(Event $event)
     {
         $data = $event->getData();
 
@@ -62,7 +76,7 @@ class ControllerEventsHandler
      *
      * @return \Iluminate\Http\Response
      */
-    private function afterShow(Event $event)
+    protected function afterShow(Event $event)
     {
         return $this->after($event);
     }
@@ -74,7 +88,7 @@ class ControllerEventsHandler
      *
      * @return \Iluminate\Http\Response
      */
-    private function afterEdit(Event $event)
+    protected function afterEdit(Event $event)
     {
         return $this->after($event);
     }
@@ -86,7 +100,7 @@ class ControllerEventsHandler
      *
      * @return \Iluminate\Http\Response
      */
-    private function afterUpdate(Event $event)
+    protected function afterUpdate(Event $event)
     {
         $data = $event->getData();
 
@@ -104,7 +118,7 @@ class ControllerEventsHandler
      *
      * @return \Iluminate\Http\Response
      */
-    private function afterDestroy(Event $event)
+    protected function afterDestroy(Event $event)
     {
         $data = $event->getData();
 

@@ -8,6 +8,11 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li><a href="{{ url('/') }}">Home</a></li>
+                <li class="active">{{ studly_case($name) }}</li>
+            </ol>
+
             <div class="panel panel-default">
                 <div class="panel-heading">
                     {{ studly_case($name) }} Index
@@ -18,11 +23,6 @@
                 </div>
 
                 <div class="panel-body">
-                    <ol class="breadcrumb">
-                        <li><a href="{{ url('/') }}">Home</a></li>
-                        <li class="active">{{ studly_case($name) }}</li>
-                    </ol>
-
                     {!! app()->make('Bonoize\Notification')->show() !!}
 
                     <div class="table-responsive">

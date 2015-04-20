@@ -1,20 +1,30 @@
 <?php namespace Bonoize\Http\Middleware;
 
 use Bonoize\Handler;
-use Bonoize\RouterHelper;
+use Bonoize\Helpers\RouterHelper;
 use Closure;
 use InvalidArgumentException;
 
 class ContentNegotiator
 {
+    /**
+     * Content handler implementation
+     *
+     * @var \Bonoize\Handler
+     */
     protected $handler;
 
+    /**
+     * Router helper implementation
+     *
+     * @var \Bonoize\Helpers\RouterHelper
+     */
     protected $router;
 
     /**
      * Create a new filter instance.
      *
-     * @param  \Bonoize\RouterHelper  $router
+     * @param  \Bonoize\Helpers\RouterHelper $router
      *
      * @return void
      */

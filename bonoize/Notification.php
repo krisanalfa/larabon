@@ -2,6 +2,13 @@
 
 class Notification
 {
+    /**
+     * Show notification
+     *
+     * @param  string $context
+     *
+     * @return \Illuminate\View\Factory
+     */
     public function show($context = 'message')
     {
         if (!session($context)) {

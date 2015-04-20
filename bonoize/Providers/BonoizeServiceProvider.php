@@ -7,6 +7,11 @@ use UnexpectedValueException;
 
 class BonoizeServiceProvider extends ServiceProvider
 {
+    /**
+     * Current configuration mapping
+     *
+     * @var array
+     */
     protected $config = [];
 
     /**
@@ -17,9 +22,9 @@ class BonoizeServiceProvider extends ServiceProvider
     public function boot()
     {
         $defaultController = config('bonoize.default');
-        $mapping           = config('bonoize.mapping', []);
+        $mapping           = config('bonoize.mapping');
 
-        if (empty($mapping)) {
+        if (is_null($mapping)) {
             return;
         }
 
@@ -28,26 +33,29 @@ class BonoizeServiceProvider extends ServiceProvider
         }
 
         $this->app['router']->pattern('id', '^[0-9a-f]{24}$');
-        $this->app['router']->pattern('extension', '\.[a-z]+');
+        $this->app['router']->pattern('extension', '\.[a-zA-Z]+');
 
         foreach ($mapping as $path => $config) {
-            $this->config = $config;
-            $resourceName = str_replace('/', '', $path);
-            $controller   = $this->getConfig('controller', $defaultController);
-            $name         = $this->getConfig('name');
-            $middlewares  = $this->getConfig('middlewares', '');
-            $me           = $this;
+            $this->config    = $config;
+            $controller      = $this->getConfig('controller', $defaultController);
+            $resourceName    = $this->getConfig('name');
+            $middlewares     = $this->getConfig('middlewares', '');
+            $serviceProvider = $this;
+
+            if (is_null($resourceName)) {
+                throw new Exception('Resource mapping configuration should has a "name"');
+            }
 
             $this->app['router']->group(['middleware' => explode('|', $middlewares)], function () use (
-                $me, $path, $controller, $name, $middlewares
+                $serviceProvider, $path, $controller, $resourceName, $middlewares
             ) {
-                $me->registerRoute(['get'], $path, $controller, 'index', $name, true);
-                $me->registerRoute(['get'], $path . '/create', $controller, 'create', $name);
-                $me->registerRoute(['post'], $path, $controller, 'store', $name, true);
-                $me->registerRoute(['get'], $path . '/{id}', $controller, 'show', $name, true);
-                $me->registerRoute(['get'], $path . '/{id}/edit', $controller, 'edit', $name);
-                $me->registerRoute(['put', 'patch'], $path . '/{id}', $controller, 'update', $name, true);
-                $me->registerRoute(['delete'], $path . '/{id}', $controller, 'destroy', $name, true);
+                $serviceProvider->registerRoute(['get'], $path, $controller, 'index', $resourceName, true);
+                $serviceProvider->registerRoute(['get'], $path . '/create', $controller, 'create', $resourceName);
+                $serviceProvider->registerRoute(['post'], $path, $controller, 'store', $resourceName, true);
+                $serviceProvider->registerRoute(['get'], $path . '/{id}', $controller, 'show', $resourceName, true);
+                $serviceProvider->registerRoute(['get'], $path . '/{id}/edit', $controller, 'edit', $resourceName);
+                $serviceProvider->registerRoute(['put', 'patch'], $path . '/{id}', $controller, 'update', $resourceName, true);
+                $serviceProvider->registerRoute(['delete'], $path . '/{id}', $controller, 'destroy', $resourceName, true);
             });
         }
     }
@@ -61,7 +69,19 @@ class BonoizeServiceProvider extends ServiceProvider
     {
     }
 
-    private function registerRoute(array $via, $path, $controller, $action, $name, $hasExtension = false)
+    /**
+     * Register the route
+     *
+     * @param  array   $via          Accepted method for your route
+     * @param  string  $path         Virtual ath to access your route
+     * @param  string  $controller   The controller name to handle your request
+     * @param  string  $action       The action in your controller to handle your request
+     * @param  string  $name         The name of your route
+     * @param  boolean $hasExtension Does your route has extension?
+     *
+     * @return void
+     */
+    protected function registerRoute(array $via, $path, $controller, $action, $name, $hasExtension = false)
     {
         if ($hasExtension === true) {
             $path = $path . '{extension?}';
@@ -81,7 +101,7 @@ class BonoizeServiceProvider extends ServiceProvider
      *
      * @return mixed
      */
-    private function getConfig($key, $default = null)
+    protected function getConfig($key, $default = null)
     {
         return isset($this->config[$key]) ? $this->config[$key] : $default;
     }

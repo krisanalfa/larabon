@@ -1,4 +1,4 @@
-<?php namespace Bonoize;
+<?php namespace Bonoize\Model;
 
 use Jenssegers\Mongodb\Model;
 

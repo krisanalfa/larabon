@@ -7,6 +7,11 @@ class ControllerEvents extends Event
 {
     use SerializesModels;
 
+    /**
+     * Attributes class
+     *
+     * @var array
+     */
     protected $attributes = [];
 
     /**
@@ -27,11 +32,19 @@ class ControllerEvents extends Event
      *
      * @return mixed
      */
-    private function get($key)
+    protected function get($key)
     {
         return isset($this->attributes[$key]) ? $this->attributes[$key] : null;
     }
 
+    /**
+     * Magic call function to get data attributes
+     *
+     * @param  string $method
+     * @param  array  $arguments
+     *
+     * @return mixed
+     */
     public function __call($method, $arguments)
     {
         $key = last(explode('get_', snake_case($method)));
