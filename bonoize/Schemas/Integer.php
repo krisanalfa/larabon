@@ -2,7 +2,7 @@
 
 use Bonoize\Schema;
 
-class Int extends Schema
+class Integer extends Schema
 {
     /**
      * Render plain format

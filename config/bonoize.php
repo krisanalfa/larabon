@@ -29,7 +29,7 @@ return [
         'user' => [
             'name'     => app()->make('Bonoize\Schemas\Str'),
             'email'    => app()->make('Bonoize\Schemas\Email'),
-            'age'      => app()->make('Bonoize\Schemas\Int'),
+            'age'      => app()->make('Bonoize\Schemas\Integer'),
             'password' => app()->make('Bonoize\Schemas\Password'),
         ],
     ],
