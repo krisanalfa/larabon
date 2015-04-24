@@ -28,5 +28,6 @@ class Kernel extends HttpKernel
         'auth.basic' => 'Illuminate\Auth\Middleware\AuthenticateWithBasicAuth',
         'guest'      => 'App\Http\Middleware\RedirectIfAuthenticated',
         'contentify' => 'Bonoize\Http\Middleware\ContentNegotiator',
+        'criteria'   => 'Bonoize\Http\Middleware\CriteriaAssignor',
     ];
 }

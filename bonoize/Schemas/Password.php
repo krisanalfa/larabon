@@ -13,6 +13,6 @@ class Password extends Schema
      */
     public function prepare($value)
     {
-        return app()->make('hash')->make($value);
+        return app('hash')->make($value);
     }
 }

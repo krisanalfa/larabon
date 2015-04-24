@@ -22,9 +22,10 @@ class ContentNegotiator
     protected $router;
 
     /**
-     * Create a new filter instance.
+     * Create a new content negotiator instance.
      *
      * @param  \Bonoize\Helpers\RouterHelper $router
+     * @param  \Bonoize\Handler              $handler
      *
      * @return void
      */

@@ -67,6 +67,7 @@ class BonoizeServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->singleton('Bonoize\Http\Requests\CriteriaParser', 'Bonoize\Http\Requests\CriteriaParser');
     }
 
     /**

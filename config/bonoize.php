@@ -1,6 +1,7 @@
 <?php
 
 return [
+
     'default' => 'Bonoize\Http\Controllers\BonoizeController',
 
     'transport' => [
@@ -11,6 +12,8 @@ return [
                 // Future feature:
                 // - More options will come
             ],
+
+            // More drivers will come, you can create Mock Driver to get data for Controller
         ],
     ],
 
@@ -18,7 +21,7 @@ return [
         '/user' => [
             'controller'  => null,
             'name'        => 'user',
-            'middlewares' => 'auth|contentify',
+            'middlewares' => 'auth|criteria|contentify',
         ],
     ],
 
@@ -26,7 +29,9 @@ return [
         'user' => [
             'name'     => app()->make('Bonoize\Schemas\Str'),
             'email'    => app()->make('Bonoize\Schemas\Email'),
+            'age'      => app()->make('Bonoize\Schemas\Int'),
             'password' => app()->make('Bonoize\Schemas\Password'),
         ],
     ],
+
 ];

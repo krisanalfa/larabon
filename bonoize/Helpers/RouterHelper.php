@@ -56,7 +56,7 @@ class RouterHelper
      */
     public function hasExtension()
     {
-        return str_contains(app()->make('request')->getPathInfo(), '.') and !empty($this->getExtension());
+        return str_contains(app('request')->getPathInfo(), '.') and !empty($this->getExtension());
     }
 
     /**

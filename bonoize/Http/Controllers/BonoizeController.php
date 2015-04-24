@@ -17,7 +17,7 @@ class BonoizeController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @var \Bonoize\DataTransport $transport
+     * @var \Bonoize\Transport $transport
      *
      * @return void
      */
@@ -63,7 +63,7 @@ class BonoizeController extends Controller
      */
     public function store($extension = null)
     {
-        $input = app()->make('request')->all();
+        $input = app('request')->all();
         $data  = $this->transport->store($extension, $input);
         $event = new ControllerEvents('afterStore', $data);
 
@@ -111,7 +111,7 @@ class BonoizeController extends Controller
      */
     public function update($id, $extension = null)
     {
-        $input = app()->make('request')->all();
+        $input = app('request')->all();
         $data  = $this->transport->update($id, $extension, $input);
         $event = new ControllerEvents('afterUpdate', $data);
 

@@ -35,11 +35,11 @@ class Transport extends Manager
     /**
      * Create JSON Handler Driver
      *
-     * @return \Bonoize\DataTransport
+     * @return \Bonoize\Transport
      */
     protected function createEloquentDriver()
     {
-        return app()->make('Bonoize\Transport\Eloquent');
+        return app('Bonoize\Transport\Eloquent');
     }
 
     /**

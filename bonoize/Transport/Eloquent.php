@@ -2,6 +2,7 @@
 
 use Bonoize\Helpers\Norm;
 use Bonoize\Helpers\RouterHelper;
+use Bonoize\Http\Requests\CriteriaParser;
 
 class Eloquent
 {
@@ -82,13 +83,15 @@ class Eloquent
     /**
      * Initialize Data Transport
      *
-     * @param \Bonoize\Helpers\Norm             $norm
-     * @param \Bonoize\Helpers\RouterHelper $router
+     * @param \Bonoize\Helpers\Norm                 $norm
+     * @param \Bonoize\Helpers\RouterHelper         $router
+     * @param \Bonoize\Http\Requests\CriteriaParser $router
      */
-    public function __construct(Norm $norm, RouterHelper $router)
+    public function __construct(Norm $norm, RouterHelper $router, CriteriaParser $criteria)
     {
-        $this->norm   = $norm;
-        $this->router = $router;
+        $this->norm     = $norm;
+        $this->router   = $router;
+        $this->criteria = $criteria;
 
         // Basic data information
         $this->resourceName     = $router->getResourceName();
@@ -147,7 +150,29 @@ class Eloquent
      */
     public function index()
     {
-        $collection = $this->eloquentInstance->all();
+        $collection = $this->eloquentInstance->where(function ($query) {
+            $query->where($this->criteria->get('criteria'));
+
+            foreach ($this->criteria->getOr() as $orExpression) {
+                $query->orWhere($orExpression[0], $orExpression[1], $orExpression[2]);
+            }
+
+            foreach ($this->criteria->getLessThan() as $field => $value) {
+                $query->where($field, '<', $value);
+            }
+
+            foreach ($this->criteria->getLessThanOrEqual() as $field => $value) {
+                $query->where($field, '<=', $value);
+            }
+
+            foreach ($this->criteria->getGreaterThan() as $field => $value) {
+                $query->where($field, '>', $value);
+            }
+
+            foreach ($this->criteria->getGreaterThanOrEqual() as $field => $value) {
+                $query->where($field, '>=', $value);
+            }
+        })->get();
 
         $this->prepareCommonData([
             'collection' => $collection,
@@ -195,7 +220,7 @@ class Eloquent
         $model->save();
 
         $this->prepareCommonData([
-            'status' => DataTransport::SUCESS,
+            'status' => static::SUCESS,
             'model'  => $model,
             'json'   => $model,
         ]);
@@ -260,7 +285,7 @@ class Eloquent
         $model->save();
 
         $this->prepareCommonData([
-            'status' => DataTransport::SUCESS,
+            'status' => static::SUCESS,
             'model'  => $model,
             'json'   => $model,
         ]);
@@ -283,7 +308,7 @@ class Eloquent
         $model->delete();
 
         $this->prepareCommonData([
-            'status' => DataTransport::SUCESS,
+            'status' => static::SUCESS,
             'model'  => $model,
             'json'   => $model,
         ]);

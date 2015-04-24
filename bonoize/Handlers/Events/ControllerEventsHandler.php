@@ -4,11 +4,11 @@ use Bonoize\Events\ControllerEvents as Event;
 
 class ControllerEventsHandler
 {
-	/**
-	 * Template implementation
-	 *
-	 * @var \Bonoize\Template
-	 */
+    /**
+     * Template implementation
+     *
+     * @var \Bonoize\Template
+     */
     protected $template;
 
     /**
@@ -25,8 +25,8 @@ class ControllerEventsHandler
      */
     public function __construct()
     {
-        $this->template = app()->make('Bonoize\Template');
-        $this->router   = app()->make('Bonoize\Helpers\RouterHelper');
+        $this->template = app('Bonoize\Template');
+        $this->router   = app('Bonoize\Helpers\RouterHelper');
     }
 
     /**
